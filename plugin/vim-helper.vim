@@ -13,6 +13,7 @@ function! OpenShEmberFile(fileType)
 		let filePath = substitute(filePath, "routes", a:fileType, 1)
 	elseif (filePath =~ "/templates/")
 		let filePath = substitute(filePath, "templates", a:fileType, 1)
+		let filePath = substitute(filePath, ".emblem", ".js", 1)
 	endif
 	
 	if (a:fileType == "templates")
