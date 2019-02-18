@@ -6,6 +6,25 @@ function! OpenShEmberFile(fileType)
 	let fileName = expand('%:t')
 	let fileExt = fnamemodify(fileName, ':e')
 	let filePath = expand('%:p')
+	let isComponent = (filePath =~ "/components/")
+
+	echo a:fileType
+
+	if (isComponent && (a:fileType != "templates" && a:fileType != "components"))
+		echo "Doesn't work on component"
+		echo "You try to open" a:fileType
+		return
+	endif
+
+	if ( isComponent )
+		if (a:fileType == "templates")
+			let filePath = substitute(filePath, "components", "templates/components", 1)
+		endif
+		if (a:fileType == "components")
+			let filePath = substitute(filePath, "templates/components", "components", 1)
+			let filePath = substitute(filePath, ".emblem", ".js", 1)
+		endif
+	endif
 
 	if (filePath =~ "/controllers/")
 		let filePath = substitute(filePath, "controllers", a:fileType, 1)
@@ -30,6 +49,6 @@ function! OpenShEmberFile(fileType)
 	elseif (g:sh_ember_split == "vertical")
 		execute "vsplit" filePath
 	elseif (g:sh_ember_split == "tab")
-		execute "tab" filePath
+		execute "tabedit" filePath
 	endif
 endfunction
